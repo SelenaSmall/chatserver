@@ -7,23 +7,12 @@
 #include "chatserver.h"
 
 int main() {
-	int listen_sock_id, coms_sock_id;
 
-	struct sockaddr_in server_addr;
+	int listen_sock_id, coms_sock_id;
 	
 	printf("Chatserver Starting on %d\n",CHATSERVER_PORT);
 
-	bzero( &server_addr, sizeof(server_addr));
-
-	listen_sock_id = socket(AF_INET,SOCK_STREAM,0);
-
-	server_addr.sin_family = AF_INET;
-	server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	server_addr.sin_port = htons(CHATSERVER_PORT);
-
-	bind(listen_sock_id, (struct sockaddr*)&server_addr, sizeof(server_addr));
-	
-	listen(listen_sock_id, 1);
+	listen_sock_id = create_listening_socket(CHATSERVER_PORT);
 
 	printf("Chatserver Listening\n");
 
@@ -35,3 +24,22 @@ int main() {
 	close(listen_sock_id);
 }
 
+int create_listening_socket(int port) {
+	int listen_socket;
+
+	struct sockaddr_in server_addr;
+
+	bzero( &server_addr, sizeof(server_addr));
+
+	listen_socket = socket(AF_INET,SOCK_STREAM,0);
+
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	server_addr.sin_port = htons(port);
+
+	bind(listen_socket, (struct sockaddr*)&server_addr, sizeof(server_addr));
+	
+	listen(listen_socket, 1);
+
+	return listen_socket;
+}
