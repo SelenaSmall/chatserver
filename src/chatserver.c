@@ -27,9 +27,30 @@ int main() {
 	print_socket(coms_sock_id, "3: See how much I've spent\n");
 	print_socket(coms_sock_id, "4: Too hard, I quit\n");
 
-	print_socket(coms_sock_id, ">");
+	int running = 1;
+	while(running) {
+		print_socket(coms_sock_id, ">");
 
-	gets_socket(coms_sock_id, (char*)&buffer);
+		gets_socket(coms_sock_id, (char*)&buffer);
+		int command = atoi(buffer);
+		switch(command) {
+			case 1: 
+				print_socket(coms_sock_id, "Beer \n Wine \n Cocktails \n");
+				break;
+			case 2: 
+				print_socket(coms_sock_id, "Food \n Drinks \n");
+				break;
+			case 3: 
+				print_socket(coms_sock_id, "Total: \n");
+				break;
+			case 4: 
+				running = 0;
+				break;
+			default:
+				print_socket(coms_sock_id, "That is not an option!\n");
+				break;
+		}
+	}
 
 	close(listen_sock_id);
 }
