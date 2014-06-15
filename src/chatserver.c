@@ -7,6 +7,7 @@
 #include "chatserver.h"
 
 int main() {
+	char buffer[1024];
 
 	int listen_sock_id, coms_sock_id;
 	
@@ -18,8 +19,17 @@ int main() {
 
 	coms_sock_id = accept(listen_sock_id, NULL, NULL);
 	
-	char str[] = "Hello :)\n\x00";
-	write(coms_sock_id, str, strlen(str));
+	print_socket(coms_sock_id, "Hello\n");
+
+	print_socket(coms_sock_id, "Please select an option:\n"); 
+	print_socket(coms_sock_id, "1: See the Menu \n");
+	print_socket(coms_sock_id, "2: Make and Order\n");
+	print_socket(coms_sock_id, "3: See how much I've spent\n");
+	print_socket(coms_sock_id, "4: Too hard, I quit\n");
+
+	print_socket(coms_sock_id, ">");
+
+	gets_socket(coms_sock_id, (char*)&buffer);
 
 	close(listen_sock_id);
 }
@@ -42,4 +52,19 @@ int create_listening_socket(int port) {
 	listen(listen_socket, 1);
 
 	return listen_socket;
+}
+
+void print_socket(int s_id, char *str) {
+	write(s_id, str, strlen(str));
+}
+
+void gets_socket(int s_id, char *str) {
+	char c;
+	while(1) {
+		read(s_id, &c, 1);
+		if (c == 10) break;
+		*str = c;
+		str++;
+	}
+	*str = 0;
 }
